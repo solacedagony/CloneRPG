@@ -1,0 +1,8 @@
+Fights
+- Random enemy
+- Multiple enemies
+- Multiple heroes
+- Timed battles
+
+WorldMap
+- Shops

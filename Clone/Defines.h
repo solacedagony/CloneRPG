@@ -7,7 +7,8 @@
 #define KEY_LEFTARROW	75
 #define KEY_RIGHTARROW	77
 #define KEY_ESCAPE		27
-	
+#define KEY_ENTER		13
+
 // Number keys
 #define KEY_1 '1'
 #define KEY_2 '2'

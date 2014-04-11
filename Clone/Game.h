@@ -24,6 +24,43 @@ class CShop;
 #define SCENE_FIGHT		4
 #define SCENE_SHOP		5
 
+enum NPCType
+{
+	TYPE_BOSS = 1,
+	TYPE_MERCHANT
+};
+
+struct MapNPC
+{
+	string name;
+	char symbol;
+	NPCType type;
+};
+
+struct Map
+{
+	string name;
+	vector< char > map;
+
+};
+
+struct RegionMonster
+{
+	string name;
+	unsigned int amount;
+};
+
+struct Region
+{
+	std::string name;
+	COORD topleft;
+	COORD bottomright;
+
+	bool hasEnemies;
+
+	vector< RegionMonster > regionMonster;
+};
+
 class CGame
 {
 public:
@@ -44,6 +81,9 @@ public:
 	CEngine *engine;
 	CPlayer *player;
 	CRandomizer randomizer;
+
+	vector< CPlayer > monsters;
+
 
 private:
 	CMainMenu *scene_MainMenu;

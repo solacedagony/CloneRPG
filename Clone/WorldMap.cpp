@@ -188,6 +188,26 @@ void CWorldMap::loadMap()
 	forestTown.bottomright.Y = 10;
 	this->region.push_back(forestTown);
 
+	CPlayer goblin;
+	goblin.name = "Goblin";
+	goblin.hpCurrent = 50;
+	goblin.hpMax = 50;
+	goblin.mpCurrent = 0;
+	goblin.mpMax = 0;
+	goblin.weapon.damageBase = 2;
+	goblin.weapon.damageMod = 1;
+	this->game->monsters.push_back(goblin);
+
+	CPlayer troll;
+	troll.name = "Troll";
+	troll.hpCurrent = 20;
+	troll.hpMax = 20;
+	troll.mpCurrent = 0;
+	troll.mpMax = 0;
+	troll.weapon.damageBase = 6;
+	troll.weapon.damageMod = 5;
+	this->game->monsters.push_back(troll);
+
 	return;
 }
 

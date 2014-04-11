@@ -9,15 +9,6 @@ class CScene;
 
 #define	FIGHT_CHANCE 0
 
-struct Region
-{
-	std::string name;
-	COORD topleft;
-	COORD bottomright;
-
-	bool hasEnemies;
-};
-
 class CWorldMap
 {
 public:

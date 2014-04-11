@@ -4,7 +4,7 @@
 CItem::CItem()
 {
 	this->name = "Unnamed Item";
-	this->type = ITEM_WEAPON;
+	this->type = ItemType::ITEMTYPE_WEAPON;
 	this->cost = 1;
 	this->weight = 1;
 

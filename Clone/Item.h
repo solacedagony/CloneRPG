@@ -5,6 +5,14 @@
 
 using std::string;
 
+enum ItemType
+{
+	ITEMTYPE_POTION = 1,
+	ITEMTYPE_WEAPON,
+	ITEMTYPE_ARMOR,
+	ITEMTYPE_QUESTITEM
+};
+
 class CItem
 {
 public:
@@ -13,7 +21,7 @@ public:
 
 	// Variables for all items
 	string name;
-	unsigned int type;
+	ItemType type;
 	unsigned int cost;
 	unsigned int weight;
 

@@ -16,8 +16,8 @@ public:
 	~CPlayer(void);
 
 	string name;
-	int level;
-	int xp;
+	unsigned int level;
+	unsigned int xp;
 
 	double hpMax;
 	double hpCurrent;
