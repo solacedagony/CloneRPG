@@ -4,6 +4,11 @@
 #include <vector>
 #include "Game.h"
 
+#define SHOP_CURSORX_COLLEFT 2
+#define SHOP_CURSORX_COLRIGHT 38
+#define SHOP_STARTROW 4
+#define SHOP_ENDROW 13
+
 enum ShopMode
 {
 	SHOPMODE_MAINMENU = 1,
@@ -20,6 +25,7 @@ public:
 	void draw();
 	void printMainMenu();
 	void printShopList(vector< CItem > itemList);
+	void processListInput();
 
 	void printCursor();
 

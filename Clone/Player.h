@@ -28,6 +28,7 @@ public:
 	double dex;
 	double intel;
 
+	vector< CItem > itemList;
 	CItem weapon;
 	CItem armor;
 	
@@ -46,7 +47,6 @@ public:
 		
 private:
 	// Inventory
-	std::vector<int> items;
 	std::vector<int> skills;
 	std::vector<int> spells;
 
