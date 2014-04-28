@@ -128,6 +128,7 @@ void CWorldMap::draw()
 	}
 	else if (tolower(input) == KEY_INVENTORY)
 	{
+		inventoryMenu();
 	}
 
 	return;
@@ -474,4 +475,16 @@ string CWorldMap::returnRegion()
 	}
 
 	return string("None");
+}
+
+void CWorldMap::inventoryMenu()
+{
+	this->game->engine->consoleClear();
+
+	for (unsigned int i = 0; i < this->game->player->itemList.size(); i++)
+	{
+		cout << this->game->player->itemList[i].name << endl;
+	}
+
+	system("pause");
 }

@@ -30,6 +30,8 @@ public:
 	void loadMap();
 	std::string returnRegion();
 
+	void inventoryMenu();
+
 private:
 	CGame *game;
 

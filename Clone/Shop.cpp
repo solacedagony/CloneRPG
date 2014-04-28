@@ -35,7 +35,7 @@ void CShop::draw()
 	sword.damageBase = 5;
 	sword.damageMod = 1;
 	sword.type = ItemType::ITEMTYPE_WEAPON;
-	for (int i = 0; i < 12; i++)
+	for (int i = 0; i < 7; i++)
 	{
 		itemList.push_back(sword);
 	}
@@ -65,10 +65,6 @@ void CShop::draw()
 
 void CShop::printMainMenu()
 {
-#define Y_BUY	5
-#define Y_SELL	6
-#define Y_EXIT	7
-
 	COORD printPos;
 	printPos.X = 5;
 	printPos.Y = Y_BUY;
@@ -131,6 +127,10 @@ void CShop::printMainMenu()
 			this->game->setScene(SCENE_WORLDMAP);
 		}
 	}
+	else if (input == KEY_ESCAPE)
+	{
+		this->game->setScene(SCENE_WORLDMAP);
+	}
 }
 
 void CShop::printShopList(vector< CItem > itemList)
@@ -177,14 +177,21 @@ void CShop::printShopList(vector< CItem > itemList)
 		this->game->engine->consolePrint("Price");
 
 		X = nameX2;
+
+		COORD exitText;
+		exitText.X = 5;
+		exitText.Y = 20;
+		this->game->engine->consoleSetPosition(exitText);
+		this->game->engine->consolePrint("ESC - Exit menu");
 	}
 
 	// Print items
-	const int maxRows = 10;
+	const int maxRows = 9;
+	bool rowChange = false;
 	for (int i = 0; i < itemList.size(); i++)
 	{
 		// Check column to print to
-		if (i < maxRows)
+		if (i <= maxRows)
 		{
 			writePos.X = nameX1;
 		}
@@ -197,7 +204,7 @@ void CShop::printShopList(vector< CItem > itemList)
 		this->game->engine->consolePrint(itemList[i].name);
 
 		// Check column to print to
-		if (i < maxRows)
+		if (i <= maxRows)
 		{
 			writePos.X = costX1;
 		}
@@ -226,64 +233,63 @@ void CShop::printShopList(vector< CItem > itemList)
 	// Grab input
 	char input = _getch();
 
-	unsigned int maxRow = 0;
+	unsigned int maxRowLeft = 0;
+	unsigned int maxRowRight = 0;
 	if (itemList.size() > 10)
 	{
-		maxRow = 10 + SHOP_STARTROW-1;
+		maxRowLeft = 10 + SHOP_STARTROW - 1;
+		maxRowRight = itemList.size() - 10 + SHOP_STARTROW - 1;
 	}
 	else
 	{
-		maxRow = itemList.size() + SHOP_STARTROW-1;
+		maxRowLeft = itemList.size() + SHOP_STARTROW - 1;
+		maxRowRight = 0;
 	}
+
+	// Choose 
+	unsigned int maxRow = maxRowLeft;
+	if (cursorPos.X == SHOP_CURSORX_COLRIGHT)
+	{
+		maxRow = maxRowRight;
+	}	
 
 	// Parse input
 	if (input == KEY_DOWNARROW)
 	{
-		// Check which side we are on
-		if (cursorPos.X == SHOP_CURSORX_COLLEFT)
+		if (cursorPos.Y == maxRow)
 		{
-			if (cursorPos.Y == maxRow)
-			{
-				cursorPos.Y = SHOP_STARTROW;
-			}
-			else
-			{
-				this->cursorPos.Y += 1;
-			}
+			cursorPos.Y = SHOP_STARTROW;
 		}
 		else
 		{
-			//TODO:Complete side checking code
+			this->cursorPos.Y += 1;
 		}
 	}
 	else if (input == KEY_UPARROW)
 	{
-		// Check which side we are on
-		if (cursorPos.X == SHOP_CURSORX_COLLEFT)
+		if (cursorPos.Y <= SHOP_STARTROW)
 		{
-			if (cursorPos.Y <= SHOP_STARTROW)
-			{
-				cursorPos.Y = maxRow;
-			}
-			else
-			{
-				this->cursorPos.Y -= 1;
-			}
+			cursorPos.Y = maxRow;
 		}
 		else
 		{
-			//TODO:Complete side checking code
+			this->cursorPos.Y -= 1;
 		}
 	}
 	else if (input == KEY_RIGHTARROW)
 	{
 		if (itemList.size() > 10)
 		{
-			if (cursorPos.X == SHOP_CURSORX_COLLEFT)
+			if (cursorPos.X == SHOP_CURSORX_COLLEFT &&
+				maxRowRight > 0)
 			{
 				cursorPos.X = SHOP_CURSORX_COLRIGHT;
 
-				//TODO:Complete side checking code
+				maxRow = maxRowRight;
+				if (cursorPos.Y > maxRow)
+				{
+					cursorPos.Y = maxRow;
+				}
 			}
 			else
 			{
@@ -295,11 +301,16 @@ void CShop::printShopList(vector< CItem > itemList)
 	{
 		if (itemList.size() > 10)
 		{
-			if (cursorPos.X == SHOP_CURSORX_COLLEFT)
+			if (cursorPos.X == SHOP_CURSORX_COLLEFT &&
+				maxRowRight > 0)
 			{
 				cursorPos.X = SHOP_CURSORX_COLRIGHT;
 
-				//TODO:Complete side checking code
+				maxRow = maxRowRight;
+				if (cursorPos.Y > maxRows)
+				{
+					cursorPos.Y = maxRows;
+				}
 			}
 			else
 			{
@@ -309,9 +320,32 @@ void CShop::printShopList(vector< CItem > itemList)
 	}
 	else if (input == KEY_ENTER)
 	{
-	}
+		// Selected item
+		const unsigned int index = cursorPos.Y - 4;
 
-	//TODO: Bug in printing
+		this->game->engine->consoleClear();
+
+		if (this->game->player->gold >= itemList[index].cost)
+		{
+
+			this->game->player->itemList.push_back(itemList[index]);
+
+			cout << "You bought a " << itemList[index].name << "." << endl;
+			cout << endl;
+			cout << "Gold: " << this->game->player->gold << " -> ";
+			this->game->player->gold -= itemList[index].cost;
+			cout << this->game->player->gold << endl;
+		}
+
+		system("pause");
+	}
+	else if (input == KEY_ESCAPE)
+	{
+		this->mode = SHOPMODE_MAINMENU;
+
+		cursorPos.X = SHOP_MAINMENU_X;
+		cursorPos.Y = Y_BUY;
+	}
 }
 
 void CShop::printCursor()

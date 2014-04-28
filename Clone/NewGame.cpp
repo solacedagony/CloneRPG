@@ -43,6 +43,7 @@ void CNewGame::draw()
 	this->game->player->weapon.damageMod = 1;
 	this->game->player->level = 1;
 	this->game->player->xp = 0;
+	this->game->player->gold = 200;
 	
 	this->game->setScene(SCENE_WORLDMAP);
 

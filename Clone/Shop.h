@@ -9,6 +9,11 @@
 #define SHOP_STARTROW 4
 #define SHOP_ENDROW 13
 
+#define Y_BUY	5
+#define Y_SELL	6
+#define Y_EXIT	7
+#define SHOP_MAINMENU_X 3;
+
 enum ShopMode
 {
 	SHOPMODE_MAINMENU = 1,

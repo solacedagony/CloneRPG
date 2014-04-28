@@ -18,6 +18,7 @@ public:
 	string name;
 	unsigned int level;
 	unsigned int xp;
+	unsigned int gold;
 
 	double hpMax;
 	double hpCurrent;
