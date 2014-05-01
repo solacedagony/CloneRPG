@@ -22,22 +22,6 @@ CShop::~CShop()
 
 void CShop::draw()
 {
-	vector< CItem > itemList;
-	CItem potion;
-	potion.name = "Small Potion";
-	potion.cost = 50;
-	potion.hpRestore = 50;
-	potion.type = ItemType::ITEMTYPE_POTION;
-	
-
-	for (int i = 0; i < 28; i++)
-	{
-		potion.name = "Small Potion" + std::to_string((long long)i);
-		itemList.push_back(potion);
-	}
-
-	this->game->player->itemList = itemList;
-
 	printMainMenu();
 }
 
@@ -88,12 +72,26 @@ void CShop::printMainMenu()
 	{
 		if (cursorPos.Y == Y_BUY)
 		{
+			vector< CItem > itemList;
+			CItem potion;
+			potion.name = "Small Potion";
+			potion.cost = 50;
+			potion.hpRestore = 50;
+			potion.type = ItemType::ITEMTYPE_POTION;
+
+			for (int i = 0; i < 28; i++)
+			{
+				potion.name = "Small Potion" + std::to_string((long long)i);
+				itemList.push_back(potion);
+			}
+
 			CSelectorMenu menu(this->game);
-			menu.printShopList("Dude", this->game->player->itemList);
+			menu.printShopList("Dude", itemList);
 		}
 		else if (cursorPos.Y == Y_SELL)
 		{
-			
+			CSelectorMenu menu(this->game);
+			menu.printPlayerList();
 		}
 		else if (cursorPos.Y == Y_EXIT)
 		{

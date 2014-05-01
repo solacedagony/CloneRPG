@@ -37,45 +37,14 @@ void CSelectorMenu::printShopList( string shopArg, vector< CItem > itemList)
 		this->game->engine->consoleClear();
 
 		// Print static text
-		printShopHeader();
-		printKeys();
+		this->printShopHeader();
+		this->printKeys();
 
 		// Print cursor
-		printCursor();
-
-		// Constants for menu printing
-		const int maxRows = 15;
-		const int yOffset = 4;
-		const int column1 = 4;
-		const int column2 = 25;
-
-		COORD writePos;
-		writePos.X = column1;
-		writePos.Y = yOffset;
-
-		// Calculate Y offset
-		unsigned int endingItem = 0;
-		if (itemList.size() < maxRows)
-		{
-			endingItem = itemList.size();
-		}
-		else
-		{
-			endingItem = maxRows;
-		}
+		this->printCursor();
 
 		// Print list
-		for (int i = 0; i < endingItem; i++)
-		{
-			writePos.X = column1;
-			writePos.Y = i + yOffset;
-			this->game->engine->consoleSetPosition(writePos);
-			this->game->engine->consolePrint(itemList[i+this->menuOffset].name);
-
-			writePos.X = column2;
-			this->game->engine->consoleSetPosition(writePos);
-			this->game->engine->consolePrint(std::to_string((long long)itemList[i + this->menuOffset].cost));
-		}
+		this->printList( itemList );
 
 		// Print cursor
 		this->printCursor();
@@ -84,55 +53,40 @@ void CSelectorMenu::printShopList( string shopArg, vector< CItem > itemList)
 		char input = _getch();
 
 		// Parse input
-		if (input == KEY_DOWNARROW)
-		{
-			if (cursorPos.Y >= (maxRows+yOffset-1) &&
-				(this->menuOffset+maxRows) < itemList.size())
-			{
-				// Increment offset down for menu
-				this->menuOffset++;
-			}
-			else if ((cursorPos.Y - yOffset + 1) < maxRows)
-			{
-				this->cursorPos.Y += 1;
-			}
-		}
-		else if (input == KEY_UPARROW)
-		{
-			if (cursorPos.Y <= yOffset &&
-				this->menuOffset > 0)
-			{
-				this->menuOffset--;
-			}
-			else if (cursorPos.Y > yOffset)
-			{
-				cursorPos.Y--;
-			}
-		}
-		else if (input == KEY_ENTER)
-		{
-			// Selected item
-			const unsigned int index = cursorPos.Y - yOffset + this->menuOffset;
+		parseInputShop(input, itemList);
+	}
+}
 
-			this->game->engine->consoleClear();
+void CSelectorMenu::printPlayerList()
+{
+	// Reset all menu settings
+	this->reset();
+	this->name = this->game->player->name;
 
-			if (this->game->player->gold >= itemList[index].cost)
-			{
-				this->game->player->itemList.push_back(itemList[index]);
+	// Menu interaction
+	while (!this->menuComplete)
+	{
+		// Clear all writing
+		this->game->engine->consoleClear();
 
-				cout << "You bought a " << itemList[index].name << "." << endl;
-				cout << endl;
-				cout << "Gold: " << this->game->player->gold << " -> ";
-				this->game->player->gold -= itemList[index].cost;
-				cout << this->game->player->gold << endl;
-			}
+		// Print static text
+		this->printShopHeader();
+		this->printKeys();
 
-			system("pause");
-		}
-		else if (input == KEY_ESCAPE)
-		{
-			this->menuComplete = true;
-		}
+		// Print cursor
+		this->printCursor();
+
+		// Print list
+		this->printList(this->game->player->itemList);
+
+		// Print cursor
+		this->printCursor();
+
+		// Grab input
+		char input = _getch();
+
+		// Parse input
+		parseInputPlayer(input, this->game->player->itemList);
 	}
 }
 
@@ -145,8 +99,8 @@ void CSelectorMenu::printCursor()
 void CSelectorMenu::printShopHeader()
 {
 	COORD writePos;
-	writePos.X = 1;
-	writePos.Y = 1;
+	writePos.X = 0;
+	writePos.Y = 0;
 	this->game->engine->consoleSetPosition(writePos);
 	this->game->engine->consolePrint(this->name + "'s Shop");
 
@@ -194,4 +148,160 @@ void CSelectorMenu::printKeys()
 	this->game->engine->consoleSetPosition(menu);
 	this->game->engine->consolePrint("Down Arrow - Scroll down");
 
+}
+
+void CSelectorMenu::printList(vector<CItem>itemList)
+{
+	COORD writePos;
+	writePos.X = MENU_COLUMN1_Y;
+	writePos.Y = MENU_YOFFSET;
+
+	if (itemList.size() > 0)
+	{
+		// Calculate Y offset
+		unsigned int endingItem = 0;
+		if (itemList.size() < MENU_MAXROWS)
+		{
+			endingItem = itemList.size();
+		}
+		else
+		{
+			endingItem = MENU_MAXROWS;
+		}
+
+		// Print list
+		for (int i = 0; i < endingItem; i++)
+		{
+			writePos.X = MENU_COLUMN1_Y;
+			writePos.Y = i + MENU_YOFFSET;
+			this->game->engine->consoleSetPosition(writePos);
+			this->game->engine->consolePrint(itemList[i + this->menuOffset].name);
+
+			writePos.X = MENU_COLUMN2_Y;
+			this->game->engine->consoleSetPosition(writePos);
+			this->game->engine->consolePrint(std::to_string((long long)itemList[i + this->menuOffset].cost));
+		}
+	}
+	else
+	{
+		this->game->engine->consoleSetPosition(writePos);
+		this->game->engine->consolePrint("You have no items!");
+	}
+}
+
+void CSelectorMenu::parseInputPlayer(char input, vector<CItem> itemList)
+{
+	if (input == KEY_DOWNARROW)
+	{
+		if (cursorPos.Y >= (MENU_MAXROWS + MENU_YOFFSET - 1) &&
+			(this->menuOffset + MENU_MAXROWS) < itemList.size())
+		{
+			// Increment offset down for menu
+			this->menuOffset++;
+		}
+		else if ((cursorPos.Y - MENU_YOFFSET + 1) < MENU_MAXROWS &&
+				 (cursorPos.Y - MENU_YOFFSET + 1) < itemList.size())
+		{
+			this->cursorPos.Y += 1;
+		}
+	}
+	else if (input == KEY_UPARROW)
+	{
+		if (cursorPos.Y <= MENU_YOFFSET &&
+			this->menuOffset > 0)
+		{
+			this->menuOffset--;
+		}
+		else if (cursorPos.Y > MENU_YOFFSET)
+		{
+			cursorPos.Y--;
+		}
+	}
+	else if (input == KEY_ENTER)
+	{
+		this->game->engine->consoleClear();
+
+		if (itemList.size() > 0)
+		{
+			// Selected item
+			unsigned int index = cursorPos.Y - MENU_YOFFSET + this->menuOffset;	
+
+			unsigned int shopCost = (int)(.80 * (float)itemList[index].cost);
+			cout << "You sold a " << itemList[index].name << "." << endl;
+			cout << endl;
+			cout << "Gold: " << this->game->player->gold << " -> ";
+			this->game->player->gold += shopCost;
+			cout << this->game->player->gold << endl;
+
+			this->game->player->itemList.erase(this->game->player->itemList.begin() + index);
+		}
+		else
+		{
+			cout << "You have no items to sell!" << endl;
+		}
+
+		system("pause");
+	}
+	else if (input == KEY_ESCAPE)
+	{
+		this->menuComplete = true;
+	}
+}
+
+void CSelectorMenu::parseInputShop(char input, vector<CItem> itemList)
+{
+	if (input == KEY_DOWNARROW)
+	{
+		if (cursorPos.Y >= (MENU_MAXROWS + MENU_YOFFSET - 1) &&
+			(this->menuOffset + MENU_MAXROWS) < itemList.size())
+		{
+			// Increment offset down for menu
+			this->menuOffset++;
+		}
+		else if ((cursorPos.Y - MENU_YOFFSET + 1) < MENU_MAXROWS &&
+				 (cursorPos.Y - MENU_YOFFSET + 1) < itemList.size())
+		{
+			this->cursorPos.Y += 1;
+		}
+	}
+	else if (input == KEY_UPARROW)
+	{
+		if (cursorPos.Y <= MENU_YOFFSET &&
+			this->menuOffset > 0)
+		{
+			this->menuOffset--;
+		}
+		else if (cursorPos.Y > MENU_YOFFSET)
+		{
+			cursorPos.Y--;
+		}
+	}
+	else if (input == KEY_ENTER)
+	{
+		// Selected item
+		const unsigned int index = cursorPos.Y - MENU_YOFFSET + this->menuOffset;
+
+		this->game->engine->consoleClear();
+
+		if (this->game->player->gold >= itemList[index].cost)
+		{
+			this->game->player->itemList.push_back(itemList[index]);
+
+			cout << "You bought a " << itemList[index].name << "." << endl;
+			cout << endl;
+			cout << "Gold: " << this->game->player->gold << " -> ";
+			this->game->player->gold -= itemList[index].cost;
+			cout << this->game->player->gold << endl;
+		}
+		else
+		{
+			cout << "You don't have enough money for that!" << endl;
+		}
+
+		system("pause");
+	}
+	else if (input == KEY_ESCAPE)
+	{
+		this->menuComplete = true;
+	}
 }

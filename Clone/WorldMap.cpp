@@ -28,24 +28,30 @@ CWorldMap::~CWorldMap()
 void CWorldMap::draw()
 {
 	// Print outside border
+	WORD defaultColor = BLACK_BG | WHITE_FG;
+	this->game->engine->consoleSetColor(defaultColor);
 	this->printBorder();
 
 	// Print selection menu
+	this->game->engine->consoleSetColor(defaultColor);
 	this->printMenu();
 
 	// Print map
+	this->game->engine->consoleSetColor(defaultColor);
 	this->printMap();
 
 	// Print hero "H"
 #define HERO_X 25
 #define HERO_Y 10
 	COORD heroPos = { HERO_X, HERO_Y };
+	this->game->engine->consoleSetColor(defaultColor);
 	this->game->engine->consolePrint("H", heroPos);
 
 #define INPUTPOS_X 0
 #define INPUTPOS_Y 22
 
 	COORD inputPos = { INPUTPOS_X, INPUTPOS_Y };
+	this->game->engine->consoleSetColor(defaultColor);
 	this->game->engine->consoleSetPosition(inputPos);
 	cout << "Enter a command: ";
 	char input;
@@ -351,6 +357,14 @@ void CWorldMap::printMap()
 					if (currentColor != (BLUE_BG | LIGHTBLUE_FG))
 					{
 						currentColor = BLUE_BG | LIGHTBLUE_FG;
+						this->game->engine->consoleSetColor(currentColor);
+					}
+				}
+				else if (newChar == "*")
+				{
+					if (currentColor != (GREEN_BG | LIGHTYELLOW_FG))
+					{
+						currentColor = GREEN_BG | LIGHTYELLOW_FG;
 						this->game->engine->consoleSetColor(currentColor);
 					}
 				}

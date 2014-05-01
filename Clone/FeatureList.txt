@@ -5,4 +5,4 @@ Fights
 - Timed battles
 
 WorldMap
-- Shops
+- "Special" mobs
