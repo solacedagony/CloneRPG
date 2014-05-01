@@ -125,6 +125,7 @@
     <ClCompile Include="NewGame.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Randomizer.cpp" />
+    <ClCompile Include="SelectorMenu.cpp" />
     <ClCompile Include="Shop.cpp" />
     <ClCompile Include="WorldMap.cpp" />
   </ItemGroup>
@@ -138,6 +139,7 @@
     <ClInclude Include="NewGame.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Randomizer.h" />
+    <ClInclude Include="SelectorMenu.h" />
     <ClInclude Include="Shop.h" />
     <ClInclude Include="WorldMap.h" />
   </ItemGroup>

@@ -17,6 +17,7 @@ class CNewGame;
 class CWorldMap;
 class CFight;
 class CShop;
+class CSelectorMenu;
 
 #define SCENE_MAINMENU	1
 #define SCENE_NEWGAME	2
@@ -84,13 +85,13 @@ public:
 
 	vector< CPlayer > monsters;
 
-
 private:
 	CMainMenu *scene_MainMenu;
 	CNewGame *scene_NewGame;
 	CWorldMap *scene_WorldMap;
 	CFight *scene_Fight;
 	CShop *scene_Shop;
+	CSelectorMenu *scene_SelectorMenu;
 
 	unsigned int scene;
 	unsigned int lastScene;

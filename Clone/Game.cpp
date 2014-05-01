@@ -7,6 +7,7 @@
 #include "Engine.h"
 #include "Player.h"
 #include "Scene.h"
+#include "SelectorMenu.h"
 
 #include "Defines.h"
 #include "MainMenu.h"
@@ -29,6 +30,7 @@ CGame::CGame(void)
 	this->scene_WorldMap = new CWorldMap(this);
 	this->scene_Fight = new CFight(this);
 	this->scene_Shop = new CShop(this);
+	this->scene_SelectorMenu = new CSelectorMenu(this);
 
 	// Change starting scene
 	this->setScene(SCENE_MAINMENU);
@@ -36,7 +38,7 @@ CGame::CGame(void)
 	// Set game name and revision
 	this->gameName = "Clone RPG";
 	this->majorVersion = 1;
-	this->minorVersion = 0;
+	this->minorVersion = 4;
 
 	this->exit = false;
 }
